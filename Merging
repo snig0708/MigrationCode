@@ -1,0 +1,426 @@
+#### loading required packages
+library(readxl)
+library(histogram)
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(dplyr)
+library(tidyr)
+library(compare)
+library(plyr)
+
+
+## importing the data
+data <- read_excel(path = "~/Desktop/TRIALdata.xlsx",col_names = FALSE)
+
+## listing the sheet name
+excel_sheets("~/Desktop/TRIALdata.xlsx")
+
+## Dimensions of the dataset
+dim(data)
+
+### splitting the region column of GDP dataset into two column
+### splitting US metropolitan areas into Region and State 
+data <- separate(data, "US metropolitan areas", c("Region", "State"), sep =",")
+
+### adding column headers for the current dataset : data
+column_names <- c("Region","State", 
+                  paste0("LabourForce_", 2001:2016), 
+                  paste0("Unemployment_", 2000:2016), 
+                  paste0("PopEstimate_", 2010:2016),
+                  paste0("PopChange_", 2010:2016),
+                  paste0("InternationalMigration_",2010:2016),
+                  paste0("DomesticMigration_", 2010:2016),
+                  paste0("NetMigration_", 2010:2016),
+                  paste0("Residual_", 2010:2016))
+colnames(data) <- column_names
+View(data) #### dataframe has information for 382 metropolitan cities
+
+### summary of the data
+
+summary(data)
+attach(data)
+
+###### GDP datset has been imported using GUI import---- "Modified_Percentage_change_in_GDP"
+
+### *********************************************************#####
+##Percentage_change_in_GDP <- Percentage_change_in_GDP[-1,]
+##separate(Percentage_change_in_GDP, Percentage_change_in_GDP$Region, into = c("Region", "State"), 
+## sep = ",", remove= TRUE)
+#######**********************************************************######
+
+####adding column headers for this dataset
+colnam <- c("Region", "State",
+            paste0("GDP_Percent_CHange_", 2002:2016))
+colnames(Modified_Percentage_change_in_GDP) <- colnam
+
+## added column names to our dataset("data")----  77 column names
+
+
+## merging the existing data with GDP dataset
+
+merge1 <- merge(x = data, y = Modified_Percentage_change_in_GDP, by = c("Region","State"), all.x = TRUE)
+View(merge1)
+
+###importing the housing dataset
+housing <- read.csv("~/Downloads/HPI_AT_metro.csv", 
+                    col.names = c("Region","State","Zipcode","Year","Dontknow1","Dontknow2"))
+
+
+
+### crime datasets have been imported
+##merging crime 2001 data
+merge2 <- merge(x= merge1, y= Crime_2001, by = c("Region","State"), all.x = TRUE)
+
+##merging crime 2002 data
+merge2 <- merge(x= merge2, y= Crime_2002, by = c("Region","State"), all.x = TRUE)
+dim(merge2)
+
+### merging crime 2003 data
+apple <- merge(x= merge2, y= Crime_2003, by = c("Region","State"), all.x = TRUE)
+
+#***************************************************Duplication of records occured***************************************
+######duplication of records occured, so correction needs to be done manually
+###### comparing the datasets after merging 2002 and 2003 respectively
+comparison <- compare(apple,merge2,allowAll=TRUE)
+##### merging the 'apple' dataset after correcting the duplicate records
+apple <- read.csv("~/Desktop/practice1/apple.csv")
+merge2 <- apple
+dim(merge2)
+#***********************************************************************************************************************
+
+
+###### ** 2004 data is not available**
+
+
+###merging 2005 data
+merge2 <- merge(x= merge2, y= Crime_2005, by = c("Region","State"), all.x = TRUE)
+dim(merge2)
+
+#### merging 2006 data
+merge2 <- merge(x= merge2, y= Crime_2006, by = c("Region","State"), all.x = TRUE)
+dim(merge2)
+
+####merging 2007 data 
+banana <- merge(x= merge2, y= CRIME_2007, by = c("Region","State"), all.x = TRUE)
+dim(banana)
+
+#***************************************************Duplication of records occured***************************************
+######duplication of records occured, so correction needs to be done manually
+###### comparing the datasets after merging 2006 and 2007 respectively
+comparison <- compare(merge2,banana,allowAll=TRUE)
+##### merging the 'banana' dataset after correcting the duplicate records
+banana <- read.csv("~/Desktop/practice1/banana.csv")
+merge2 <- banana
+dim(merge2)
+#***********************************************************************************************************************
+
+
+###merging 2008 data
+custard <- merge(x= merge2, y= Crime_2008, by = c("Region","State"), all.x = TRUE)
+dim(custard)
+
+
+#***************************************************Duplication of records occured***************************************
+######duplication of records occured, so correction needs to be done manually
+###### comparing the datasets after merging 2007 and 2008 respectively
+comparison <- compare(merge2,custard,allowAll=TRUE)
+##### merging the 'custard' dataset after correcting the duplicate records
+custard <- read.csv("~/Desktop/practice1/custard.csv")
+merge2 <- custard
+dim(merge2)
+#***********************************************************************************************************************
+
+
+
+###merging the 2009 data
+dragonfruit <- merge(x= merge2, y= crime_2009, by = c("Region","State"), all.x = TRUE)
+dim(dragonfruit)
+
+
+#***************************************************Duplication of records occured***************************************
+######duplication of records occured, so correction needs to be done manually
+###### comparing the datasets after merging 2008 and 2009 respectively
+comparison <- compare(merge2,dragonfruit,allowAll=TRUE)
+##### merging the 'dragonfruit' dataset after correcting the duplicate records
+dragonfruit <- read.csv("~/Desktop/practice1/dragonfruit.csv")
+merge2 <- dragonfruit
+dim(merge2)
+#***********************************************************************************************************************
+
+
+
+###merging the 2010 data 
+elderberry <- merge(x= merge2, y= Crime_2010, by = c("Region","State"), all.x = TRUE)
+dim(elderberry)
+
+
+#***************************************************Duplication of records occured***************************************
+######duplication of records occured, so correction needs to be done manually
+###### comparing the datasets after merging 2009 and 2010 respectively
+comparison <- compare(merge2,elderberry,allowAll=TRUE)
+##### merging the 'elderberry' dataset after correcting the duplicate records
+elderberry <- read.csv("~/Desktop/practice1/elderberry.csv")
+merge2 <- elderberry
+dim(merge2)
+#***********************************************************************************************************************
+
+
+
+
+### merging the 2011 data
+fig <- merge(x= merge2, y= Crime_2011, by = c("Region","State"), all.x = TRUE)
+dim(fig)
+
+
+#***************************************************Duplication of records occured***************************************
+######duplication of records occured, so correction needs to be done manually
+###### comparing the datasets after merging 2010 and 2011 respectively
+comparison <- compare(merge2,fig,allowAll=TRUE)
+##### merging the 'fig' dataset after correcting the duplicate records
+fig <- read.csv("~/Desktop/practice1/fig.csv")
+merge2 <- fig
+dim(merge2)
+#***********************************************************************************************************************
+
+
+
+
+### merging the 2012 data
+grapes <- merge(x= merge2, y= Crime_2012, by = c("Region","State"), all.x = TRUE)
+dim(grapes)
+
+#***************************************************Duplication of records occured***************************************
+######duplication of records occured, so correction needs to be done manually
+###### comparing the datasets after merging 2011 and 2012 respectively
+comparison <- compare(merge2,grapes,allowAll=TRUE)
+##### merging the 'grapes' dataset after correcting the duplicate records
+grapes <- read.csv("~/Desktop/practice1/grapes.csv")
+merge2 <- grapes
+dim(merge2)
+#***********************************************************************************************************************
+
+
+
+###merging the 2013 data 
+merge2 <- merge(x= merge2, y= Crime_2013, by = c("Region","State"), all.x = TRUE)
+
+
+###merging the 2014 data
+honeydew <- merge(x= merge2, y= Crime_2014, by = c("Region","State"), all.x = TRUE)
+dim(honeydew)
+
+
+#***************************************************Duplication of records occured***************************************
+######duplication of records occured, so correction needs to be done manually
+###### comparing the datasets after merging 2013 and 2014 respectively
+comparison <- compare(merge2,honeydew,allowAll=TRUE)
+##### merging the 'honeydew' dataset after correcting the duplicate records
+honeydew <- read.csv("~/Desktop/practice1/honeydew.csv")
+merge2 <- honeydew
+dim(merge2)
+#***********************************************************************************************************************
+
+
+
+
+### merging the 2015 data
+imbe <- merge(x= merge2, y= Crime_2015, by = c("Region","State"), all.x = TRUE)
+dim(imbe)
+
+#***************************************************Duplication of records occured***************************************
+######duplication of records occured, so correction needs to be done manually
+###### comparing the datasets after merging 2014 and 2015 respectively
+comparison <- compare(merge2,imbe,allowAll=TRUE)
+##### merging the 'imbe' dataset after correcting the duplicate records
+imbe <- read.csv("~/Desktop/practice1/imbe.csv")
+merge2 <- imbe
+dim(merge2)
+#***********************************************************************************************************************
+
+
+
+### merging the 2016 data
+jackfruit <- merge(x= merge2, y= Crime_2016, by = c("Region","State"), all.x = TRUE)
+dim(jackfruit)
+
+#***************************************************Duplication of records occured***************************************
+######duplication of records occured, so correction needs to be done manually
+###### comparing the datasets after merging 2015 and 2016 respectively
+comparison <- compare(merge2,jackfruit,allowAll=TRUE)
+##### merging the 'jackfruit' dataset after correcting the duplicate records
+jackfruit <- read.csv("~/Desktop/practice1/jackfruit.csv")
+merge2 <- jackfruit
+dim(merge2)
+#***********************************************************************************************************************
+
+
+
+
+###### our merged dataset after merging all the crime datasets 
+View(merge2)
+
+
+#**************************************************************************************************************************************
+#**************************************************************************************************************************************
+
+
+####  Imported the housing dataset---- "housing"
+
+#### removing the zipcode column (column 3) and creating a new dataset---"housing2"
+housing2 <- housing[-c(3,5)]
+#### now this is a 'long' dataset...(a dataset that contains values which are column headers)
+#### we are changing it into a "wide" dataset: by giving each of the years' a separate column like HousingYear_2001, HousingYear_2002, etc....
+#### doing it for "Dontknow2" variable
+h <- spread(housing2, Year, Dontknow2)
+
+#### Now, doing it for "Dontknow1" variable
+housing2 <- housing[-c(3,6)]
+i <- spread(housing2, Year, Dontknow1)
+
+#### renaming the columns of the "h" and "i" datasets
+
+colnam <- c("Region", "State",
+            paste0("Dontknow2_", 2000:2017))
+colnames(h) <- colnam
+
+
+colnam <- c("Region", "State",
+            paste0("Dontknow1_", 2000:2017))
+colnames(i) <- colnam
+
+
+#### cleaned the "i" and "h" datasets manually... 
+i <- read.csv("~/Desktop/practice1/i.csv")
+h <- read.csv("~/Desktop/practice1/h.csv")
+
+blah <- merge(x= merge2, y= housing333, by = c("Region","State"), all.x = TRUE)
+
+
+
+###### merging university dataset *********************************************
+final1 <- read.csv("~/Desktop/final1.csv")
+uniRank <- read.csv("~/Desktop/uni_rank_count.csv")
+new1 <- merge(x= final1, y=uniRank , by = c("Region","State"), all.x = TRUE)
+
+
+####### merging the index dataset**********************************************
+index <- read.csv("~/Desktop/Metro_index_formated.csv")
+
+
+
+
+######################################################
+##***** checking for missing values*****************
+
+
+
+any(is.na(merge2$LabourForce_2001)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2002)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2003)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2004)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2005)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2006)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2007)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2008)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2009)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2010)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2011)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2012)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2013)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2014)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2015)) ## o/p: FALSE
+any(is.na(merge2$LabourForce_2016)) ## o/p: FALSE
+
+any(is.na(merge2$Unemployment_2000)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2001)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2002)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2003)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2004)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2005)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2006)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2007)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2008)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2009)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2010)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2011)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2012)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2013)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2014)) ## o/p: FALSE
+any(is.na(merge2$Unemployment_2015)) ## o/p: FALSE 
+any(is.na(merge2$Unemployment_2016)) ## o/p: FALSE
+
+any(is.na(merge2$PopEstimate_2010)) ## o/p: FALSE
+any(is.na(merge2$PopEstimate_2011)) ## o/p: FALSE
+any(is.na(merge2$PopEstimate_2012)) ## o/p: FALSE
+any(is.na(merge2$PopEstimate_2013)) ## o/p: FALSE
+any(is.na(merge2$PopEstimate_2014)) ## o/p: FALSE
+any(is.na(merge2$PopEstimate_2015)) ## o/p: FALSE
+any(is.na(merge2$PopEstimate_2016)) ## o/p: FALSE
+
+
+any(is.na(merge2$PopChange_2010)) ## o/p: FALSE
+any(is.na(merge2$PopChange_2011)) ## o/p: FALSE
+any(is.na(merge2$PopChange_2012)) ## o/p: FALSE
+any(is.na(merge2$PopChange_2013)) ## o/p: FALSE
+any(is.na(merge2$PopChange_2014)) ## o/p: FALSE
+any(is.na(merge2$PopChange_2015)) ## o/p: FALSE
+any(is.na(merge2$PopChange_2016)) ## o/p: FALSE
+
+any(is.na(merge2$InternationalMigration_2010)) ## o/p: FALSE
+any(is.na(merge2$InternationalMigration_2011)) ## o/p: FALSE
+any(is.na(merge2$InternationalMigration_2012)) ## o/p: FALSE
+any(is.na(merge2$InternationalMigration_2013)) ## o/p: FALSE
+any(is.na(merge2$InternationalMigration_2014)) ## o/p: FALSE
+any(is.na(merge2$InternationalMigration_2015)) ## o/p: FALSE
+any(is.na(merge2$InternationalMigration_2016)) ## o/p: FALSE
+
+
+any(is.na(merge2$DomesticMigration_2010)) ## o/p: FALSE
+any(is.na(merge2$DomesticMigration_2011)) ## o/p: FALSE
+any(is.na(merge2$DomesticMigration_2012)) ## o/p: FALSE
+any(is.na(merge2$DomesticMigration_2013)) ## o/p: FALSE
+any(is.na(merge2$DomesticMigration_2014)) ## o/p: FALSE
+any(is.na(merge2$DomesticMigration_2015)) ## o/p: FALSE
+any(is.na(merge2$DomesticMigration_2016)) ## o/p: FALSE
+
+any(is.na(merge2$NetMigration_2010))## o/p: FALSE
+any(is.na(merge2$NetMigration_2011))## o/p: FALSE
+any(is.na(merge2$NetMigration_2012))## o/p: FALSE
+any(is.na(merge2$NetMigration_2013))## o/p: FALSE
+any(is.na(merge2$NetMigration_2014))## o/p: FALSE
+any(is.na(merge2$NetMigration_2015))## o/p: FALSE
+any(is.na(merge2$NetMigration_2016))## o/p: FALSE
+
+any(is.na(merge2$Residual_2010)) ## o/p: FALSE
+any(is.na(merge2$Residual_2011)) ## o/p: FALSE
+any(is.na(merge2$Residual_2012)) ## o/p: FALSE
+any(is.na(merge2$Residual_2013)) ## o/p: FALSE
+any(is.na(merge2$Residual_2014)) ## o/p: FALSE
+any(is.na(merge2$Residual_2015)) ## o/p: FALSE
+any(is.na(merge2$Residual_2016)) ## o/p: FALSE
+
+any(is.na(merge2$GDP_Percent_CHange_2003)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2004)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2005)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2006)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2007)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2008)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2009)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2010)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2011)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2012)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2013)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2014)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2015)) ## o/p: TRUE
+any(is.na(merge2$GDP_Percent_CHange_2016)) ## o/p: TRUE
+
+
+
+
+
+
+
+
+
+
